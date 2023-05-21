@@ -62,7 +62,7 @@ The stick has a TTL 3.3v UART console (configured as 115200 8-N-1) that can be a
 ##  Disabling Dying Gasp
 ```sh
 uci set gpon.gtc.nDyingGaspEnable='0'; uci commit gpon
-``
+```
 
 ## PLOAM
 
