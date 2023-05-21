@@ -62,6 +62,89 @@ The stick has a TTL 3.3v UART console (configured as 115200 8-N-1) that can be a
 ##  Disabling Dying Gasp
 ```sh
 uci set gpon.gtc.nDyingGaspEnable='0'; uci commit gpon
+``
+
+## PLOAM
+
+- PLOAM must be configured in HTTP manage page in section called SLID
+
+## Set operator ID
+
+This setting must be inserted in order to performs the others parameters modification
+```sh
+ritool set OperatorID 0000
+```
+
+## Set serial number (I.E. ALCLf123456d)
+
+```sh
+ritool set MfrID ALCL
+ritool set G984Serial f123456d
+ritool set YPSerialNum f123456d
+```
+
+## Set MAC address (I.E. 123456789ABC)
+
+```sh
+ritool set MACAddress 12:34:56:78:9A:BC
+```
+
+## Set Hardwar version (I.E. 3FE47211EGAA01)
+
+```sh
+ritool set HardwareVersion 3FE47211EGAA
+ritool set ICS 01
+```
+## Set software version
+
+Software verion must be changed by directly modifing firmware by using patches file which can be found in github page of [Nokia G-010-A](https://github.com/hwti/G-010S-A/tree/main/patches/0000_dropbear)
+using specific script
+
+## Set equipment ID (I.E. __________G-010G-Q__)
+
+```sh
+ritool set CleiCode __________
+ritool set Mnemonic G-010G-Q__
+```
+
+## Upgrade firmware commands
+
+First of all preparare an emergency TTL access
+
+```sh
+fw_setenv bootdelay 5
+fw_setenv asc0 0
+fw_setenv preboot
+```
+
+Verify which is the actual active partition with
+
+```sh
+upgradestatus
+```
+
+The update must be done with [PSCP](https://the.earth.li/~sgtatham/putty/latest/w64/pscp.exe) by using SCP protocol
+
+```sh
+pscp.exe -scp C:\3FE46398BGCB22.bin ONTUSER@192.168.1.10:/tmp
+```
+
+Then if active partition is 0 then use 1 if viceversa use the 0
+
+```sh
+mtd write /tmp/3FE46398BGCB22.bin image1
+update_env_flag 1 
+reboot
+```
+
+## Miscellaneous commands
+
+```sh
+cat /configs/image_version
+cat /usr/etc/buildinfo
+ritool dump
+omciMgr
+ifconfig eth0:1 192.168.1.10 netmask 255.255.255.0
 ```
 
 # HW Modding
